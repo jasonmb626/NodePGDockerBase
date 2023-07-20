@@ -1,0 +1,23 @@
+#docker pull node:18.9.0 latest successful test
+FROM node:latest 
+
+RUN apt-get update && \
+  apt-get -y install sudo
+
+RUN echo 'node ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+RUN adduser node sudo
+
+WORKDIR /code
+
+RUN chown -R 1000:1000 /code
+
+USER node
+
+COPY --chown=1000:1000 ./app/package.json .
+
+RUN npm i
+
+COPY --chown=1000:1000 ./app/* ./
+
+# CMD ["node", "app.js"]

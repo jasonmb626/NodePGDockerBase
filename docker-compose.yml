@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodeapp
+    container_name: app
+    restart: always
+    volumes:
+      - .:/code:Z
+    stdin_open: true
+    tty: true
+    user: 1000:1000
+    environment:
+      PGUSER: app
+      PGPASSWORD: 654321
+      PGHOST: db
+      PGPORT: 5432
+      PGDATABASE: project_name
+      DATABASE_URL: postgres://app@$localhost:5432/project_name
+  db:
+    image: postgres
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - appdb:/var/lib/postgresql/data:Z
+    stdin_open: true
+    tty: true
+    ports:
+      - 5432:5432
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: jason@jasonbrunelle.com
+      PGADMIN_DEFAULT_PASSWORD: example
+    ports:
+      - 8080:80
+volumes:
+  appdb:

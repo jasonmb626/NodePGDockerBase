@@ -1,0 +1,24 @@
+#This is a utiltity container
+
+#Rather than directly running npm init, npm i, etc you can run as below:
+#docker run -it --rm -v $(pwd):/app:Z npm init
+#docker run -it --rm -v $(pwd):/app:Z npm i pg
+
+#docker pull node:18.9.0 latest successful test
+FROM node:latest 
+
+RUN userdel -r node
+
+ARG USER_ID
+
+ARG GROUP_ID
+
+RUN addgroup --gid $GROUP_ID user
+
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+
+USER user
+
+WORKDIR /app
+
+ENTRYPOINT [ "npm" ]
